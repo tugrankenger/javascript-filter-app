@@ -1,4 +1,4 @@
-let filteredProducts = [...products];
+let filteredProducts = [...families];
 
 //console.log(filteredProducts)
 
@@ -10,15 +10,16 @@ const displayProducts = () =>{
         return;
     }else{
         productsContainer.innerHTML = filteredProducts.map((product)=>{
-            const {id,title,image,price} = product; // const id = product.id, ...
+            const {id,title,image,url} = product; // const id = product.id, ...
             return `
-                <article class="product" data-id="${id}">
-                    <img src="${image}" alt="" class="product-img img" />
-                    <footer>
-                        <h5 class="product-name">${title}</h5>
-                        <span class="product-price">${price}</span>
-                    </footer>
-                </article>
+                    <article class="product" data-id="${id}">
+                        <a href="${url}" target="_blank" class="card-link">
+                            <img src="${image}" alt="" class="product-img img" />
+                        </a>
+                        <footer>
+                            <h5 class="product-name">${title}</h5>
+                        </footer>
+                    </article>
             `;
         }).join("");
     }
@@ -33,8 +34,39 @@ const searchInput = document.querySelector('.search-input');
 form.addEventListener("keyup",function(){
     const inputValue = searchInput.value;
     //console.log(inputValue)
-    filteredProducts = products.filter((product)=>{
+    filteredProducts = families.filter((product)=>{
         return product.title.toLowerCase().includes(inputValue);
     });
     displayProducts();
+});
+
+const companiesDOM = document.querySelector('.companies');
+
+const displayButtons = () =>{
+    const buttons = [
+        'all', ...new Set(families.map((product)=>product.family)), // All, Ikea, Marcos ...
+    ];
+    console.log(buttons);
+
+    companiesDOM.innerHTML = buttons
+    .map((family) =>{
+        return `<button class="company-btn" data-id="${family}">${family}</button>`;
+    }).join("");
+}
+displayButtons();
+
+companiesDOM.addEventListener("click",(e) =>{
+    const el = e.target;
+    //console.log(el)
+    if(el.classList.contains('company-btn')){
+        if(el.dataset.id === 'all'){
+            filteredProducts = [...families];
+        }else{
+            filteredProducts = families.filter((product) =>{
+                return product.family === el.dataset.id;
+            });
+        }
+        searchInput.value= "";
+        displayProducts();
+    }
 });
