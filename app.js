@@ -1,15 +1,15 @@
-let filterProducts = [...products];
+let filteredProducts = [...products];
 
-//console.log(filterProducts)
+//console.log(filteredProducts)
 
 const productsContainer = document.querySelector('.products-container');
 
 const displayProducts = () =>{
-    if(filterProducts.length < 1){
+    if(filteredProducts.length < 1){
         productsContainer.innerHTML = `<h5>Sorry, no products matched your search</h5>`;
         return;
     }else{
-        productsContainer.innerHTML = filterProducts.map((product)=>{
+        productsContainer.innerHTML = filteredProducts.map((product)=>{
             const {id,title,image,price} = product; // const id = product.id, ...
             return `
                 <article class="product" data-id="${id}">
@@ -25,3 +25,16 @@ const displayProducts = () =>{
 };
 
 displayProducts();
+
+// text filter to target value
+const form = document.querySelector('.input-form');
+const searchInput = document.querySelector('.search-input');
+
+form.addEventListener("keyup",function(){
+    const inputValue = searchInput.value;
+    //console.log(inputValue)
+    filteredProducts = products.filter((product)=>{
+        return product.title.toLowerCase().includes(inputValue);
+    });
+    displayProducts();
+});
